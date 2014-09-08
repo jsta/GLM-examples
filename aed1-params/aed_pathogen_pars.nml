@@ -1,5 +1,5 @@
 ! AED pathogen database
-! AED1 - version 1.4.0
+! AED1 - Version 1.4.0
 !----------------------------------------------------------------!
 ! coef_grwth_uMAX                                                !-- Max growth rate at 20C
 ! coef_grwth_Tmin, coef_grwth_Tmax                               !-- Tmin and Tmax, f(T)
