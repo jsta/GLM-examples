@@ -35,11 +35,16 @@
    coef_mix_hyp = 0.5
 !  mobility_off = .false.
 !  non_avg = .true.
+!  deep_mixing = .true.
+!  atmstab = .false.
 /
 
 !-------------------------------------------------------------------------------
 ! wq setup
 !-------------------------------------------------------------------------------
+! wq_lib            [string] 
+!                     Select which WQ library to use;
+!                     valid options are 'aed2' or 'fabm' [default is 'aed2']
 ! ode_method        [integer]
 !                     ODE numerical scheme for source and sink dynamics
 !                     1: first-order explicit (not positive)
@@ -64,12 +69,14 @@
 ! repair_state      [bool]
 !                     FABM option to repeair state variables that have -ve's
 ! wq_nml_file       [string]
-!                     name of fabm.nml file to be passed to FABM
+!                     name of .nml file to be passed to WQ library;
+!                     the default is {wq_lib}.nml (eg aed2.nml)
 ! multi_ben         [bool]
 !                     GLM specific option for FABM to do benthic fluxes only
 !                     in bottom layer, or on flanks of all layers (.true.)
 !-------------------------------------------------------------------------------
 &wq_setup
+   wq_lib = 'fabm'
    ode_method = 1
    split_factor = 1
    bioshade_feedback = .true.
@@ -149,6 +156,7 @@
    !stop = '2007-05-02 00:00:00'
    dt = 3600.0
    num_days=3288
+   timezone = 7.0
 /
 
 !-------------------------------------------------------------------------------
@@ -278,7 +286,7 @@
 !   wind_factor    [float]  wind multiplication factor (-)
 !   ce             [float]  bulk aerodynamic coefficient for latent heat transfer
 !   ch             [float]  bulk aerodynamic coefficient for sensible heat transfer
-!   coef_wind_drag [float]  bulk aerodynamic coefficient for transfer of momentum
+!   cd             [float]  bulk aerodynamic coefficient for transfer of momentum
 !
 !-------------------------------------------------------------------------------
 &meteorology
@@ -295,10 +303,34 @@
 !  at_factor = 1.0
 !  rh_factor = 1.0
 !  rain_factor = 1.0
-   coef_wind_drag = 0.0013
+   cd         = 0.0013
    ce         = 0.0013
    ch         = 0.0013
+   rad_mode    = 1
+   albedo_mode = 1
+   cloud_mode  = 4
 !  time_fmt = 'YYYY-MM-DD hh:mm:ss'
+/
+
+!-------------------------------------------------------------------------------
+! bird_model
+!-------------------------------------------------------------------------------
+!
+!   AP = 973           Atmospheric Pressure in milibars
+!   Oz = 0.279         Ozone concentration in atm-cm
+!   WatVap = 1.1       Total Precipitable water vapor in atm-cm
+!   AOD500 = 0.033     Dimensionless Aerosol Optical Depth at wavelength 500 nm
+!   AOD380 = 0.038     Dimensionless Aerosol Optical Depth at wavelength 380 nm
+!   Albedo = 0.2       Default Albedo value
+!
+!-------------------------------------------------------------------------------
+&bird_model
+  AP = 973
+  Oz = 0.279
+  WatVap = 1.1
+  AOD500 = 0.033
+  AOD380 = 0.038
+  Albedo = 0.2
 /
 
 !-------------------------------------------------------------------------------
