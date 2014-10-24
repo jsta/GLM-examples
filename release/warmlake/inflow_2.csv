@@ -1,4 +1,4 @@
-time,flow,temp,salt,aed_oxygen_oxy,aed_silica_rsi,aed_nitrogen_amm,aed_nitrogen_nit,aed_phosphorus_frp,aed_organic_matter_pon,aed_organic_matter_don,aed_organic_matter_pop,aed_organic_matter_dop,aed_organic_matter_poc,aed_organic_matter_doc,aed_phytoplankton_phy03,aed_phytoplankton_phy07,aed_phytoplankton_phy08
+time,flow,temp,salt,OXY_oxy,SIL_rsi,NIT_amm,NIT_nit,PHS_frp,OGM_pon,OGM_don,OGM_pop,OGM_dop,OGM_poc,OGM_doc,PHY_phy03,PHY_phy07,PHY_phy08
 1997-01-01,40.28225806,15.11197,0.2872,326.8125,0,1.142857143,175,0.774193548,0,0,0,0,0,0,0,0,0
 1997-01-02,40.28225806,15.11197,0.2872,326.8125,0,1.142857143,175.7142857,0.870967742,0,0,0,0,0,0,0,0,0
 1997-01-03,40.28225806,15.11197,0.2872,326.8125,0,0.785714286,165,0.741935484,0,0,0,0,0,0,0,0,0
