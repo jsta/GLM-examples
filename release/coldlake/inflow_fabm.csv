@@ -1,4 +1,4 @@
-time, flow, temp, salt,OXY_oxy,SIL_rsi,NIT_amm,NIT_nit,PHS_frp,OGM_pon,OGM_don,OGM_pop,OGM_dop,OGM_poc,OGM_doc,PHY_green,PHY_diatom,PHY_crypto
+time, flow, temp, salt,aed_oxygen_oxy,aed_silica_rsi,aed_nitrogen_amm,aed_nitrogen_nit,aed_phosphorus_frp,aed_organic_matter_pon,aed_organic_matter_don,aed_organic_matter_pop,aed_organic_matter_dop,aed_organic_matter_poc,aed_organic_matter_doc,aed_phytoplankton_green,aed_phytoplankton_diatom,aed_phytoplankton_crypto
 1998-01-01,0,0,0,225,12.5,12.5,27.6,0.25,70,5,10,10,80,700,40,40,40
 1998-01-02,0,0,0,225,12.5,12.5,27.6,0.25,70,5,10,10,80,700,40,40,40
 1998-01-03,0,0,0,225,12.5,12.5,27.6,0.25,70,5,10,10,80,700,40,40,40
