@@ -167,8 +167,6 @@
 !                     path to output directory (set permissions)
 ! out_fn            [string]
 !                     name of output netcdf file
-! out_lkn           [logical]  
-!                     output Lake Number to a file
 ! nsave             [integer, minimum = 1, maximum = 86400]
 !                     save results every 'nsave' timesteps
 ! csv_lake_fname    [string]
@@ -188,7 +186,6 @@
 &output
    out_dir = '.'
    out_fn = 'output'
-   out_lkn = .true.
    nsave = 24
 
    csv_point_nlevs = 2
