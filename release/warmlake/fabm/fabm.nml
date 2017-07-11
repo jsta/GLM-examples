@@ -14,8 +14,7 @@
 !  
 !-------------------------------------------------------------------------------
 &fabm_nml
-   models = !'gotm_npzd',
-            'aed_sedflux',
+   models = 'aed_sedflux',
             'aed_oxygen',
             'aed_carbon',
             'aed_silica',
@@ -26,7 +25,6 @@
             'aed_zooplankton',
             'aed_tracer'
 /
-
 
 !-------------------------------------------------------------------------------
 ! gotm_npzd - GOTM nutrient-phytoplankton-zooplankton-detritus model
