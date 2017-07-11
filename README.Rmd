@@ -7,4 +7,26 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Mirror of the GLM examples at: http://aed.see.uwa.edu.au/research/models/GLM/Pages/set_up.html
+> Mirror of the GLM examples at: http://aed.see.uwa.edu.au/research/models/GLM/Pages/set_up.html
+
+```{r message=FALSE}
+library(glmtools)
+```
+
+## Warm Lake
+
+```{r }
+gml_nml <- read_nml("release/warmlake/aed2/glm2.nml")
+names(glm_nml)
+
+(input_files <- c(glm_nml$meteorology$meteo_fl, glm_nml$inflow$inflow_fl, glm_nml$outflow$outflow_fl))
+
+aed_nml <- read_nml("release/warmlake/aed2/aed2.nml")
+```
+
+
+```{r }
+run_glm(sim_folder = "release/warmlake/aed2")
+```
+
+
