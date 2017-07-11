@@ -1,0 +1,78 @@
+---
+title: "GLM examples"
+output: 
+  html_document:
+    df_print:
+      paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+> Mirror of the GLM examples at: http://aed.see.uwa.edu.au/research/models/GLM/Pages/set_up.html
+
+```{r message=FALSE}
+library(glmtools)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+## Warm Lake
+
+```{r }
+sim_folder <- "../release/warmlake/aed2"
+glm_nml_path <- file.path(sim_folder, "glm2.nml")
+glm_nml <- read_nml(glm_nml_path)
+aed_nml <- read_nml(file.path(sim_folder, "aed2.nml"))
+
+names(glm_nml)
+
+(input_files <- c(glm_nml$meteorology$meteo_fl, 
+                  glm_nml$inflow$inflow_fl, 
+                  glm_nml$outflow$outflow_fl))
+
+(start_end <- glm_nml$time[c("start", "stop")])
+```
+
+
+```{r eval=FALSE}
+run_glm(sim_folder)
+```
+
+```{r }
+lake_csv <- read.csv(file.path(sim_folder, "lake.csv"), 
+                     stringsAsFactors = FALSE)
+lake_csv$time <- as.POSIXct(lake_csv$time)
+lake_csv <- gather(lake_csv, variable, value, -time)
+lake_csv <- filter(lake_csv, 
+               variable %in% c("Tot.Inflow.Vol", "Tot.Outflow.Vol", 
+                               "Rain", "Evaporation"))
+
+ggplot(data = lake_csv) + 
+  geom_line(aes(x = time, y = value, color = variable))
+```
+
+
+```{r rows.print = 10}
+out_file <- file.path(sim_folder, "output.nc")
+sim_vars(out_file)
+sim_metrics(with_nml = TRUE)
+
+heat_fluxes <- get_var(out_file, var_name = c("I_0"))
+
+ggplot(data = heat_fluxes) + 
+  geom_point(aes(x = DateTime, y = I_0))
+```
+
+```{r }
+epi_temp <- get_var(out_file, var_name = "temp")
+
+epi_temp_measured <- readxl::read_excel(
+  "../release/warmlake/data/ObservedTempData.xlsx", col_names = FALSE)[,c(2:4)]
+names(epi_temp_measured) <- c("hours", "date", "temp")
+
+
+
+```
