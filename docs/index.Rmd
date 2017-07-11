@@ -17,15 +17,18 @@ library(glmtools)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
+library(janitor)
 ```
 
 ## Warm Lake
 
+### No FABM
+
 ```{r }
 sim_folder <- "../release/warmlake/aed2"
+# sim_folder <- "release/warmlake/aed2"
 glm_nml_path <- file.path(sim_folder, "glm2.nml")
 glm_nml <- read_nml(glm_nml_path)
-aed_nml <- read_nml(file.path(sim_folder, "aed2.nml"))
 
 names(glm_nml)
 
@@ -68,11 +71,61 @@ ggplot(data = heat_fluxes) +
 
 ```{r }
 epi_temp <- get_var(out_file, var_name = "temp")
+epi_temp$DateTime <- as.POSIXct(substring(epi_temp$DateTime, 0, 20))
 
 epi_temp_measured <- readxl::read_excel(
-  "../release/warmlake/data/ObservedTempData.xlsx", col_names = FALSE)[,c(2:4)]
-names(epi_temp_measured) <- c("hours", "date", "temp")
+  file.path(
+    paste(pathological::split_path(sim_folder)[[1]][c(-10)], 
+        collapse = "/"), 
+    "data", "ObservedTempData.xlsx"), 
+  col_names = FALSE)[,c(2:4)]
+names(epi_temp_measured) <- c("hours", "date", "temp_measured")
+epi_temp_measured$DateTime <- as.POSIXct(paste0(epi_temp_measured$date, 
+                                                " 00:00:00"))
 
+epi_temp <- dplyr::left_join(epi_temp, epi_temp_measured)
+lake_csv <- read.csv(file.path(sim_folder, "lake.csv"), 
+                     stringsAsFactors = FALSE)
+lake_csv$time <- as.POSIXct(lake_csv$time)
+lake_csv <- dplyr::select(lake_csv, c(time, Surface.Temp))
+epi_temp <- dplyr::left_join(epi_temp, lake_csv, by = c("DateTime" = "time"))
+# plot(epi_temp$DateTime, epi_temp$temp.elv_0)
+# plot(epi_temp$DateTime, epi_temp$temp.elv_13.2350650316971)
+# plot(epi_temp$DateTime, epi_temp$temp.elv_37.4993509231419)
+# plot(epi_temp$DateTime, epi_temp$temp_measured)
 
+epi_temp <- select(epi_temp, -date, -hours)
+names(epi_temp) <- substring(names(epi_temp), 0, 12)
+epi_temp <- remove_empty_cols(epi_temp)
 
+cor_mat <- cor(
+  select(epi_temp, -DateTime)[complete.cases(epi_temp),]
+  )
+cor_mat[lower.tri(cor_mat)] <- NA
+
+epi_temp <- dplyr::select(epi_temp, 
+                          c("DateTime", "temp.elv_37.", 
+                            "temp_measure", "Surface.Temp"))
+
+res <- tidyr::gather(epi_temp, variable, value, -DateTime)
+
+# epi_temp$measured <- "modeled"
+# epi_temp[epi_temp$variable == "temp_measured", "measured"] <- "measured"
+
+ggplot(data = res) + 
+  geom_point(aes(x = DateTime, y = value, color = variable))
+
+```
+
+### Yes FABM
+
+```{r }
+sim_folder <- "../release/warmlake/fabm"
+# sim_folder <- "release/warmlake/fabm"
+glm_nml_path <- file.path(sim_folder, "glm2_fabm.nml")
+glm_nml <- read_nml(glm_nml_path)
+fabm_nml_path <- file.path(sim_folder, "fabm.nml")
+fabm_nml <- read_nml(fabm_nml_path)
+
+names(fabm_nml)
 ```
