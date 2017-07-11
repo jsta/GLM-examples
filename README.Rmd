@@ -16,16 +16,16 @@ library(glmtools)
 ## Warm Lake
 
 ```{r }
-gml_nml <- read_nml("release/warmlake/aed2/glm2.nml")
+glm_nml <- read_nml("release/warmlake/aed2/glm2.nml")
+aed_nml <- read_nml("release/warmlake/aed2/aed2.nml")
+
 names(glm_nml)
 
 (input_files <- c(glm_nml$meteorology$meteo_fl, glm_nml$inflow$inflow_fl, glm_nml$outflow$outflow_fl))
-
-aed_nml <- read_nml("release/warmlake/aed2/aed2.nml")
 ```
 
 
-```{r }
+```{r eval=FALSE}
 run_glm(sim_folder = "release/warmlake/aed2")
 ```
 
