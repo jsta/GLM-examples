@@ -1,0 +1,10 @@
+---
+title: "GLM examples"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Mirror of the GLM examples at: http://aed.see.uwa.edu.au/research/models/GLM/Pages/set_up.html
