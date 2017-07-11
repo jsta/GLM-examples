@@ -81,7 +81,6 @@
    bioshade_feedback = .true.
    repair_state = .true.
 !  mobility_off = .false.
-   multi_ben = .true.
 /
 
 !-------------------------------------------------------------------------------
@@ -297,7 +296,6 @@
    met_sw      = .true.
    lw_type     = 'LW_IN'
    rain_sw     = .false.
-   snow_sw     = .false.
    atm_stab    = .false.
    catchrain   = .false.
    rad_mode    = 1
