@@ -60,7 +60,7 @@ ggplot(data = lake_csv) +
 
 ```{r rows.print = 10}
 out_file <- file.path(sim_folder, "output.nc")
-sim_vars(out_file)
+(s_vars <- sim_vars(out_file))
 sim_metrics(with_nml = TRUE)
 
 heat_fluxes <- get_var(out_file, var_name = c("I_0"))
@@ -84,11 +84,17 @@ epi_temp_measured$DateTime <- as.POSIXct(paste0(epi_temp_measured$date,
                                                 " 00:00:00"))
 
 epi_temp <- dplyr::left_join(epi_temp, epi_temp_measured)
+
 lake_csv <- read.csv(file.path(sim_folder, "lake.csv"), 
                      stringsAsFactors = FALSE)
 lake_csv$time <- as.POSIXct(lake_csv$time)
-lake_csv <- dplyr::select(lake_csv, c(time, Surface.Temp))
-epi_temp <- dplyr::left_join(epi_temp, lake_csv, by = c("DateTime" = "time"))
+epi_temp <- dplyr::left_join(epi_temp, lake_csv, 
+                             by = c("DateTime" = "time"))
+lake_csv <- tidyr::gather(lake_csv, variable, value, -time)
+lake_csv <- dplyr::filter(lake_csv, 
+               variable %in% c("Tot.Inflow.Vol", "Tot.Outflow.Vol", 
+                               "Rain", "Evaporation"))
+
 # plot(epi_temp$DateTime, epi_temp$temp.elv_0)
 # plot(epi_temp$DateTime, epi_temp$temp.elv_13.2350650316971)
 # plot(epi_temp$DateTime, epi_temp$temp.elv_37.4993509231419)
@@ -122,10 +128,52 @@ ggplot(data = res) +
 ```{r }
 sim_folder <- "../release/warmlake/fabm"
 # sim_folder <- "release/warmlake/fabm"
-glm_nml_path <- file.path(sim_folder, "glm2_fabm.nml")
+glm_nml_path <- file.path(sim_folder, "glm2.nml")
 glm_nml <- read_nml(glm_nml_path)
 fabm_nml_path <- file.path(sim_folder, "fabm.nml")
 fabm_nml <- read_nml(fabm_nml_path)
 
 names(fabm_nml)
+
+get_nml_value(glm_nml, "csv_point_vars")
+glm_nml <- set_nml(glm_nml, "csv_point_vars", 
+            arg_val = "temp,salt,aed_oxygen_oxy,gotm_npzd_nut")
+write_nml(glm_nml, file.path(sim_folder, "glm2.nml"))
+```
+
+```{r eval=FALSE}
+run_glm(sim_folder)
+```
+
+```{r }
+lake_csv_fabm <- read.csv(file.path(sim_folder, "lake.csv"), 
+                     stringsAsFactors = FALSE)
+lake_csv_fabm$time <- as.POSIXct(lake_csv_fabm$time)
+lake_csv_fabm <- tidyr::gather(lake_csv_fabm, variable, value, -time)
+lake_csv_fabm <- dplyr::filter(lake_csv_fabm, 
+               variable %in% c("Tot.Inflow.Vol", "Tot.Outflow.Vol", 
+                               "Rain", "Evaporation"))
+
+ggplot(data = lake_csv_fabm) + 
+  geom_line(aes(x = time, y = value, color = variable))
+```
+
+```{r rows.print = 10}
+out_file_fabm <- file.path(sim_folder, "output.nc")
+(s_vars_fabm <- sim_vars(out_file))
+```
+
+```{r rows.print = 10}
+var_names <- paste0("SDF_Fsed_", 
+                    c("amm", "ch4", "dic", 
+                      "doc", "don", "dop",                                                            "feii", "frp"))
+
+for(i in seq_len(length(var_names))){
+  p_sed_rate <- get_var(out_file, var_name = var_names[i])
+  plot(p_sed_rate)  
+}
+
+plot(get_var(out_file, "PHS_frp")[,c(1, 20)])
+
+get_var(out_file, "OGM_doc")
 ```
